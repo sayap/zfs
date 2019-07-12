@@ -1,0 +1,33 @@
+src = @abs_top_srcdir@/module/zstd_zfs
+obj = @abs_builddir@
+
+MODULE := zstd_zfs
+
+obj-$(CONFIG_ZFS) := $(MODULE).o
+
+asflags-y += $(ZFS_MODULE_CFLAGS)
+ccflags-y := $(ZFS_MODULE_CFLAGS) $(ZFS_MODULE_CPPFLAGS)
+ccflags-y += -Wframe-larger-than=20480
+
+$(MODULE)-objs += zstd/common/zstd_common.o
+$(MODULE)-objs += zstd/common/fse_decompress.o
+$(MODULE)-objs += zstd/common/entropy_common.o
+$(MODULE)-objs += zstd/common/error_private.o
+$(MODULE)-objs += zstd/common/xxhash.o
+$(MODULE)-objs += zstd/compress/zstd_compress.o
+$(MODULE)-objs += zstd/compress/fse_compress.o
+$(MODULE)-objs += zstd/compress/hist.o
+$(MODULE)-objs += zstd/compress/huf_compress.o
+$(MODULE)-objs += zstd/compress/zstd_double_fast.o
+$(MODULE)-objs += zstd/compress/zstd_fast.o
+$(MODULE)-objs += zstd/compress/zstd_lazy.o
+$(MODULE)-objs += zstd/compress/zstd_ldm.o
+$(MODULE)-objs += zstd/compress/zstd_opt.o
+$(MODULE)-objs += zstd/decompress/zstd_ddict.o
+$(MODULE)-objs += zstd/decompress/zstd_decompress.o
+$(MODULE)-objs += zstd/decompress/zstd_decompress_block.o
+$(MODULE)-objs += zstd/decompress/huf_decompress.o
+$(MODULE)-objs += zstd.o
+
+all:
+	ln -sf @abs_top_srcdir@/contrib/zstd/zstd-1.4.0/lib @abs_top_srcdir@/module/zstd_zfs/zstd
