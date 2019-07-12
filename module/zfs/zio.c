@@ -390,7 +390,8 @@ zio_decompress(zio_t *zio, abd_t *data, uint64_t size)
 	if (zio->io_error == 0) {
 		void *tmp = abd_borrow_buf(data, size);
 		int ret = zio_decompress_data(BP_GET_COMPRESS(zio->io_bp),
-		    zio->io_abd, tmp, zio->io_size, size);
+		    zio->io_abd, tmp, zio->io_size, size,
+		    &zio->io_prop.zp_complevel);
 		abd_return_buf_copy(data, tmp, size);
 
 		if (zio_injection_enabled && ret == 0)
@@ -440,7 +441,8 @@ zio_decrypt(zio_t *zio, abd_t *data, uint64_t size)
 			 */
 			tmp = zio_buf_alloc(lsize);
 			ret = zio_decompress_data(BP_GET_COMPRESS(bp),
-			    zio->io_abd, tmp, zio->io_size, lsize);
+			    zio->io_abd, tmp, zio->io_size, lsize,
+			    &zio->io_prop.zp_complevel);
 			if (ret != 0) {
 				ret = SET_ERROR(EIO);
 				goto error;
@@ -528,6 +530,27 @@ error:
 		}
 	} else {
 		zio->io_error = ret;
+	}
+}
+
+static void
+zio_getcomplevel(zio_t *zio, abd_t *data, uint64_t size)
+{
+	if (zio->io_error == 0) {
+		void *tmp = abd_borrow_buf_copy(data, size);
+		int ret;
+
+		ret = zio_decompress_getcomplevel(BP_GET_COMPRESS(zio->io_bp),
+		    tmp, size, &zio->io_prop.zp_complevel);
+
+		abd_return_buf(data, tmp, size);
+
+		/* Not having a getcomplevel function is non-fatal */
+		if (ret == EOPNOTSUPP)
+			return;
+
+		if (ret != 0)
+			zio->io_error = SET_ERROR(EIO);
 	}
 }
 
@@ -1427,10 +1450,19 @@ zio_read_bp_init(zio_t *zio)
 	ASSERT3P(zio->io_bp, ==, &zio->io_bp_copy);
 
 	if (BP_GET_COMPRESS(bp) != ZIO_COMPRESS_OFF &&
-	    zio->io_child_type == ZIO_CHILD_LOGICAL &&
-	    !(zio->io_flags & ZIO_FLAG_RAW_COMPRESS)) {
-		zio_push_transform(zio, abd_alloc_sametype(zio->io_abd, psize),
-		    psize, psize, zio_decompress);
+	    zio->io_child_type == ZIO_CHILD_LOGICAL) {
+		if ((zio->io_flags & ZIO_FLAG_RAW_COMPRESS)) {
+			/*
+			 * Even if ZIO_FLAG_RAW_COMPRESS is set, we still need
+			 * to know the compression level.
+			 */
+			zio_push_transform(zio, zio->io_abd, psize,
+			    0, zio_getcomplevel);
+		} else {
+			zio_push_transform(zio,
+			    abd_alloc_sametype(zio->io_abd, psize), psize,
+			    psize, zio_decompress);
+		}
 	}
 
 	if (((BP_IS_PROTECTED(bp) && !(zio->io_flags & ZIO_FLAG_RAW_ENCRYPT)) ||
@@ -1588,7 +1620,8 @@ zio_write_compress(zio_t *zio)
 	if (compress != ZIO_COMPRESS_OFF &&
 	    !(zio->io_flags & ZIO_FLAG_RAW_COMPRESS)) {
 		void *cbuf = zio_buf_alloc(lsize);
-		psize = zio_compress_data(compress, zio->io_abd, cbuf, lsize);
+		psize = zio_compress_data(compress, zio->io_abd, cbuf, lsize,
+		    zp->zp_complevel);
 		if (psize == 0 || psize == lsize) {
 			compress = ZIO_COMPRESS_OFF;
 			zio_buf_free(cbuf, lsize);
@@ -1651,7 +1684,7 @@ zio_write_compress(zio_t *zio)
 		 * to a hole.
 		 */
 		psize = zio_compress_data(ZIO_COMPRESS_EMPTY,
-		    zio->io_abd, NULL, lsize);
+		    zio->io_abd, NULL, lsize, zp->zp_complevel);
 		if (psize == 0)
 			compress = ZIO_COMPRESS_OFF;
 	} else {
@@ -2738,6 +2771,7 @@ zio_write_gang_block(zio_t *pio)
 
 		zp.zp_checksum = gio->io_prop.zp_checksum;
 		zp.zp_compress = ZIO_COMPRESS_OFF;
+		zp.zp_complevel = gio->io_prop.zp_complevel;
 		zp.zp_type = DMU_OT_NONE;
 		zp.zp_level = 0;
 		zp.zp_copies = gio->io_prop.zp_copies;
