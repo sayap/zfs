@@ -7,7 +7,7 @@ obj-$(CONFIG_ZFS) := $(MODULE).o
 
 asflags-y += $(ZFS_MODULE_CFLAGS)
 ccflags-y := $(ZFS_MODULE_CFLAGS) $(ZFS_MODULE_CPPFLAGS)
-ccflags-y += -Wframe-larger-than=20480
+ccflags-y += -Wframe-larger-than=20480 -Wno-uninitialized
 
 $(MODULE)-objs += zstd/common/zstd_common.o
 $(MODULE)-objs += zstd/common/fse_decompress.o
