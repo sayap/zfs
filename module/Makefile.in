@@ -4,8 +4,8 @@ subdir-m += lua
 subdir-m += nvpair
 subdir-m += spl
 subdir-m += unicode
-subdir-m += zcommon
 subdir-m += zstd_zfs
+subdir-m += zcommon
 subdir-m += zfs
 
 INSTALL_MOD_DIR ?= extra
