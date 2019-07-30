@@ -521,7 +521,7 @@ zstd_init(void)
 
 	/* Allocate a last-ditch DCTX to use on allocation failure */
 	zstd_dctx_emerg.ptr = kmem_alloc(
-	    zstd_cache_size[ZSTD_KMEM_DCTX].kmem_size, KM_NOSLEEP);
+	    zstd_cache_size[ZSTD_KMEM_DCTX].kmem_size, KM_SLEEP);
 	if (zstd_dctx_emerg.ptr == NULL) {
 		return (1);
 	}
