@@ -516,7 +516,7 @@ zstd_init(void)
 	    zstd_cache_size[i].kmem_size, 0, NULL, NULL, NULL, NULL, NULL, 0);
 
 	/* Sort the kmem caches for later searching */
-	qsort(zstd_cache_size, ZSTD_KMEM_COUNT, sizeof (struct zstd_kmem),
+	qsort(zstd_cache_size, ZSTD_KMEM_DCTX, sizeof (struct zstd_kmem),
 	    zstd_compare);
 
 	/* Allocate a last-ditch DCTX to use on allocation failure */
