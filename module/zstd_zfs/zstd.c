@@ -558,5 +558,5 @@ EXPORT_SYMBOL(zstd_get_level);
 
 MODULE_DESCRIPTION("ZSTD Compression for ZFS");
 MODULE_LICENSE("BSD 3-Clause");
-MODULE_VERSION("1.4.2");
+MODULE_VERSION("1.4.3");
 #endif

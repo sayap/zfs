@@ -1,1 +1,1 @@
-EXTRA_DIST = zstd-1.4.2
+EXTRA_DIST = zstd-1.4.3

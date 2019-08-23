@@ -4,9 +4,9 @@ VPATH = \
 	$(top_srcdir)/module/zfs \
 	$(top_srcdir)/module/zcommon \
 	$(top_srcdir)/module/lua \
-	$(top_srcdir)/contrib/zstd/zstd-1.4.2/lib/common \
-	$(top_srcdir)/contrib/zstd/zstd-1.4.2/lib/compress \
-	$(top_srcdir)/contrib/zstd/zstd-1.4.2/lib/decompress \
+	$(top_srcdir)/contrib/zstd/zstd-1.4.3/lib/common \
+	$(top_srcdir)/contrib/zstd/zstd-1.4.3/lib/compress \
+	$(top_srcdir)/contrib/zstd/zstd-1.4.3/lib/decompress \
 	$(top_srcdir)/module/zstd_zfs \
 	$(top_srcdir)/lib/libzpool
 
@@ -21,10 +21,10 @@ AM_CFLAGS += -DLIB_ZPOOL_BUILD -Wframe-larger-than=20480 -Wno-uninitialized
 DEFAULT_INCLUDES += \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/lib/libspl/include \
-	-I$(top_srcdir)/contrib/zstd/zstd-1.4.2/lib \
-	-I$(top_srcdir)/contrib/zstd/zstd-1.4.2/lib/common \
-	-I$(top_srcdir)/contrib/zstd/zstd-1.4.2/lib/compress \
-	-I$(top_srcdir)/contrib/zstd/zstd-1.4.2/lib/decompress
+	-I$(top_srcdir)/contrib/zstd/zstd-1.4.3/lib \
+	-I$(top_srcdir)/contrib/zstd/zstd-1.4.3/lib/common \
+	-I$(top_srcdir)/contrib/zstd/zstd-1.4.3/lib/compress \
+	-I$(top_srcdir)/contrib/zstd/zstd-1.4.3/lib/decompress
 
 lib_LTLIBRARIES = libzpool.la
 
