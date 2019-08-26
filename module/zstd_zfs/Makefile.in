@@ -32,4 +32,4 @@ $(MODULE)-objs += zstd/decompress/huf_decompress.o
 $(MODULE)-objs += zstd.o
 
 all:
-	ln -sf @abs_top_srcdir@/contrib/zstd/zstd-1.4.3/lib @abs_top_srcdir@/module/zstd_zfs/zstd
+	[ ! -e @abs_top_srcdir@/module/zstd_zfs/zstd ] && ln -sf @abs_top_srcdir@/contrib/zstd/zstd-1.4.3/lib @abs_top_srcdir@/module/zstd_zfs/zstd || true
