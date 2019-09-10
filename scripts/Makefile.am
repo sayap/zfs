@@ -50,7 +50,6 @@ export KMOD_ZUNICODE=@abs_top_builddir@/module/unicode/zunicode.ko
 export KMOD_ZCOMMON=@abs_top_builddir@/module/zcommon/zcommon.ko
 export KMOD_ZLUA=@abs_top_builddir@/module/lua/zlua.ko
 export KMOD_ICP=@abs_top_builddir@/module/icp/icp.ko
-export KMOD_ZSTD_ZFS=@abs_top_builddir@/module/zstd_zfs/zstd_zfs.ko
 export KMOD_ZFS=@abs_top_builddir@/module/zfs/zfs.ko
 endef
 

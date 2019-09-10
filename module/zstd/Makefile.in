@@ -1,0 +1,24 @@
+ccflags-y += -I@abs_top_srcdir@/module/zstd/include
+ccflags-y += -Wframe-larger-than=20480 -Wno-uninitialized
+
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/common/zstd_common.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/common/fse_decompress.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/common/entropy_common.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/common/error_private.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/common/xxhash.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/zstd_compress.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/zstd_compress_literals.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/zstd_compress_sequences.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/fse_compress.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/hist.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/huf_compress.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/zstd_double_fast.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/zstd_fast.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/zstd_lazy.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/zstd_ldm.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/compress/zstd_opt.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/decompress/zstd_ddict.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/decompress/zstd_decompress.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/decompress/zstd_decompress_block.o
+$(MODULE)-objs += ../../contrib/zstd/zstd-1.4.3/lib/decompress/huf_decompress.o
+$(MODULE)-objs += ../zstd/zstd.o

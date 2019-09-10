@@ -4,9 +4,9 @@ subdir-m += lua
 subdir-m += nvpair
 subdir-m += spl
 subdir-m += unicode
-subdir-m += zstd-zfs
 subdir-m += zcommon
 subdir-m += zfs
+subdir-m += zstd
 
 INSTALL_MOD_DIR ?= extra
 
@@ -19,7 +19,7 @@ ZFS_MODULE_CFLAGS += -I@abs_top_srcdir@/contrib/zstd/zstd-1.4.3/lib
 ZFS_MODULE_CFLAGS += -I@abs_top_srcdir@/contrib/zstd/zstd-1.4.3/lib/common
 ZFS_MODULE_CFLAGS += -I@abs_top_srcdir@/contrib/zstd/zstd-1.4.3/lib/compress
 ZFS_MODULE_CFLAGS += -I@abs_top_srcdir@/contrib/zstd/zstd-1.4.3/lib/decompress
-ZFS_MODULE_CFLAGS += -I@abs_top_srcdir@/module/zstd_zfs/include
+ZFS_MODULE_CFLAGS += -I@abs_top_srcdir@/module/zstd/include
 
 ZFS_MODULE_CPPFLAGS += -D_KERNEL
 ZFS_MODULE_CPPFLAGS += @KERNEL_DEBUG_CPPFLAGS@
@@ -29,7 +29,7 @@ ZFS_MODULE_CPPFLAGS += @KERNEL_DEBUG_CPPFLAGS@
 
 export ZFS_MODULE_CFLAGS ZFS_MODULE_CPPFLAGS
 
-SUBDIR_TARGETS = icp lua zstd_zfs
+SUBDIR_TARGETS = icp lua
 
 modules:
 	list='$(SUBDIR_TARGETS)'; for targetdir in $$list; do \

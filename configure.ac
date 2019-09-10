@@ -139,10 +139,10 @@ AC_CONFIG_FILES([
 	module/unicode/Makefile
 	module/zcommon/Makefile
 	module/zfs/Makefile
+	module/zstd/Makefile
 	module/lua/Makefile
 	module/icp/Makefile
 	module/spl/Makefile
-	module/zstd_zfs/Makefile
 	include/Makefile
 	include/linux/Makefile
 	include/spl/Makefile

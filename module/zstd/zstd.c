@@ -40,10 +40,6 @@
 #define	qsort(base, num, size, cmp)	sort(base, num, size, cmp, NULL)
 #endif
 
-#if !defined(_KERNEL) || !defined(__linux__)
-#define	__init
-#define	__exit
-#endif
 #define	__unused			__attribute__((unused))
 
 static size_t real_zstd_compress(const char *source, char *dest, int isize,
@@ -475,7 +471,7 @@ zstd_free(void *opaque __unused, void *ptr)
 	}
 }
 
-extern int __init
+void
 zstd_init(void)
 {
 	int i;
@@ -523,15 +519,12 @@ zstd_init(void)
 	zstd_dctx_emerg.ptr = kmem_alloc(
 	    zstd_cache_size[ZSTD_KMEM_DCTX].kmem_size, KM_SLEEP);
 	if (zstd_dctx_emerg.ptr == NULL) {
-		return (1);
+		panic("Failed to allocate memory in zstd_init()");
 	}
 	mutex_init(&zstd_dctx_emerg.mtx, NULL, MUTEX_DEFAULT, NULL);
-
-
-	return (0);
 }
 
-extern void __exit
+void
 zstd_fini(void)
 {
 	int i, type;
@@ -548,15 +541,7 @@ zstd_fini(void)
 	}
 }
 
-#if  defined(__linux__) && defined(_KERNEL)
-module_init(zstd_init);
-module_exit(zstd_fini);
 EXPORT_SYMBOL(zstd_compress);
 EXPORT_SYMBOL(zstd_decompress_level);
 EXPORT_SYMBOL(zstd_decompress);
 EXPORT_SYMBOL(zstd_get_level);
-
-MODULE_DESCRIPTION("ZSTD Compression for ZFS");
-MODULE_LICENSE("BSD 3-Clause");
-MODULE_VERSION("1.4.3");
-#endif
