@@ -442,6 +442,7 @@ zstd_alloc(void *opaque __unused, size_t size)
 	}
 	/* No matching cache */
 	if (type == ZSTD_KMEM_UNKNOWN) {
+		/* XXX: This is likely to fail on Linux if nbytes > 64KB */
 		z = kmem_alloc(nbytes, KM_NOSLEEP);
 	}
 	if (z == NULL) {
@@ -516,8 +517,8 @@ zstd_init(void)
 	    zstd_compare);
 
 	/* Allocate a last-ditch DCTX to use on allocation failure */
-	zstd_dctx_emerg.ptr = kmem_alloc(
-	    zstd_cache_size[ZSTD_KMEM_DCTX].kmem_size, KM_SLEEP);
+	zstd_dctx_emerg.ptr = kmem_cache_alloc(zstd_kmem_cache[ZSTD_KMEM_DCTX],
+			    KM_SLEEP);
 	if (zstd_dctx_emerg.ptr == NULL) {
 		panic("Failed to allocate memory in zstd_init()");
 	}
@@ -529,8 +530,7 @@ zstd_fini(void)
 {
 	int i, type;
 
-	kmem_free(zstd_dctx_emerg.ptr,
-	    zstd_cache_size[ZSTD_KMEM_DCTX].kmem_size);
+	kmem_cache_free(zstd_kmem_cache[ZSTD_KMEM_DCTX], zstd_dctx_emerg.ptr);
 	mutex_destroy(&zstd_dctx_emerg.mtx);
 
 	for (i = 0; i < ZSTD_KMEM_COUNT; i++) {
